@@ -1,0 +1,142 @@
+# 🏥 NeurologyInsurance — Canonical Transformation Engine
+
+**POC Demo v2.0 · July 2026**
+
+A source-agnostic data transformation engine that ingests raw insurance CSV files,
+applies canonical transformation rules, and produces Bureau + Destination flat files
+for ISO, NCCI, and Florida State OIR regulatory reporting.
+
+---
+
+## 🚀 Live Demo
+
+👉 **[Open the Live App](https://your-app-name.streamlit.app)** *(update this link after deploy)*
+
+---
+
+## 📁 What This App Does
+
+```
+SOURCE CSV  →  CANONICAL LAYER  →  BUREAU CROSSWALK  →  DESTINATION CSV
+PolicyHeader     12 Canonical Fields   ISO / NCCI / FL State   DestPolicy
+ClaimHeader      14 Transform Rules    56 Crosswalk Entries    DestClaim
+```
+
+### Features
+- ✅ Paste or upload **any** Policy or Claim CSV (Guidewire, Duck Creek, or custom)
+- ✅ Applies all **14 transformation rules** (TR-NI-001 through TR-NI-014)
+- ✅ Validates **ICD-10-CM** diagnosis codes against neurological reference (20 G-codes)
+- ✅ **NLP classification** of TreatmentDesc to canonical TreatmentType
+- ✅ Generates **7 downloadable CSV outputs**: Canonical Policy, Canonical Claim, ISO Bureau, NCCI Bureau, FL State OIR, DestPolicy, DestClaim
+- ✅ Color-coded **Transformation Log** (✅ Success / ⚠️ Warning / ❌ Hard Reject)
+- ✅ Real-time **stats dashboard** with record counts
+
+### Lookup Tables Built In
+| Table | Referenced By | Default |
+|-------|--------------|---------|
+| CoverageLUT | TR-NI-004 | STANDARD |
+| PlanTypeLUT | TR-NI-005 | STANDARD |
+| LossTypeLUT | TR-NI-008 | HARD REJECT |
+| BenefitTypeLUT | TR-NI-010 | UNCLASSIFIED |
+| ICD10_REF | TR-NI-011 | NULL (nullable) |
+
+---
+
+## 🖥️ Run Locally
+
+### Prerequisites
+- Python 3.9 or higher
+- pip
+
+### Steps
+
+**1. Clone this repository**
+```bash
+git clone https://github.com/YOUR-USERNAME/neurologyinsurance-engine.git
+cd neurologyinsurance-engine
+```
+
+**2. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**3. Run the app**
+```bash
+streamlit run neuro_app.py
+```
+
+**4. Open your browser**
+```
+http://localhost:8501
+```
+
+---
+
+## ☁️ Deploy to Streamlit Community Cloud (Free)
+
+1. Push this repo to GitHub (see steps below)
+2. Go to **[share.streamlit.io](https://share.streamlit.io)**
+3. Sign in with your GitHub account
+4. Click **"New app"**
+5. Select:
+   - **Repository:** `YOUR-USERNAME/neurologyinsurance-engine`
+   - **Branch:** `main`
+   - **Main file path:** `neuro_app.py`
+6. Click **"Deploy!"**
+7. Your app will be live at: `https://YOUR-USERNAME-neurologyinsurance-engine.streamlit.app`
+
+---
+
+## 📂 Project Structure
+
+```
+neurologyinsurance-engine/
+├── neuro_app.py          ← Main Streamlit application
+├── requirements.txt      ← Python dependencies
+├── README.md             ← This file
+├── .gitignore            ← Git ignore rules
+└── .streamlit/
+    └── config.toml       ← Streamlit theme & server config
+```
+
+---
+
+## 🗺️ Pipeline Architecture
+
+| Layer | Tables | Owner |
+|-------|--------|-------|
+| **Source** | PolicyHeader (ID=6), ClaimHeader (ID=7) | Underwriting / Claims Ops |
+| **Canonical** | Canon_NeurologyPolicy, Canon_NeurologyClaim | Data Engineering |
+| **Bureau** | ISO, NCCI, Florida State OIR | Compliance |
+| **Destination** | DestPolicy (ID=5), DestClaim (ID=6) | Data Products |
+
+---
+
+## 📋 Sample Data
+
+The app includes pre-loaded sample data for immediate demo use.
+You can also upload your own CSV files using the file upload buttons.
+
+**Policy CSV columns required:**
+`PolicyNo, NamedInsured, PolicyStartDate, CoverageCode, PlanType`
+
+**Claim CSV columns required:**
+`ClaimNo, PolicyNo, LossDate, LossTypeCode, AmountPaid, BenefitCategory, DiagCode, TreatmentDesc, ClaimStatusCode`
+
+---
+
+## 🔮 Roadmap
+
+- [ ] SQLite database persistence layer
+- [ ] Supabase cloud database integration
+- [ ] Guidewire PolicyCenter / ClaimCenter field mapping
+- [ ] User authentication (login page)
+- [ ] Scheduled batch processing
+- [ ] Email notification on transform completion
+
+---
+
+## 📄 License
+
+Internal POC — NeurologyInsurance Data Governance Team · 2026
